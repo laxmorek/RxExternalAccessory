@@ -11,6 +11,7 @@
 		AB8BA04221FB65470005624C /* RxExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB8BA03821FB65470005624C /* RxExternalAccessory.framework */; };
 		AB8BA04721FB65470005624C /* RxExternalAccessoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BA04621FB65470005624C /* RxExternalAccessoryTests.swift */; };
 		AB8BA04921FB65470005624C /* RxExternalAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = AB8BA03B21FB65470005624C /* RxExternalAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AB8BA05521FB68C80005624C /* Bundle+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BA05421FB68C80005624C /* Bundle+Utils.swift */; };
 		E1A2B1CEAAFABBCC46B7003D /* Pods_RxExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7F886A25EBE99E781E14EFE /* Pods_RxExternalAccessory.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +37,7 @@
 		AB8BA04121FB65470005624C /* RxExternalAccessoryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxExternalAccessoryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB8BA04621FB65470005624C /* RxExternalAccessoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExternalAccessoryTests.swift; sourceTree = "<group>"; };
 		AB8BA04821FB65470005624C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB8BA05421FB68C80005624C /* Bundle+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Utils.swift"; sourceTree = "<group>"; };
 		FDFBD10E6EBA41BDDF7C9CBC /* Pods-RxExternalAccessory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxExternalAccessory.release.xcconfig"; path = "Target Support Files/Pods-RxExternalAccessory/Pods-RxExternalAccessory.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,7 +70,6 @@
 				02F97665721CCB691F2B55A7 /* Pods-RxExternalAccessoryTests.debug.xcconfig */,
 				25986D0508E5F58841D3F712 /* Pods-RxExternalAccessoryTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -114,8 +115,17 @@
 		AB8BA05221FB65F10005624C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				AB8BA05321FB68710005624C /* Extensions */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		AB8BA05321FB68710005624C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AB8BA05421FB68C80005624C /* Bundle+Utils.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		F77F026C2B386B5195D9C606 /* Frameworks */ = {
@@ -190,6 +200,7 @@
 				TargetAttributes = {
 					AB8BA03721FB65470005624C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 					AB8BA04021FB65470005624C = {
 						CreatedOnToolsVersion = 10.1;
@@ -283,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB8BA05521FB68C80005624C /* Bundle+Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +443,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D007F56EBB7FD39CE16C306 /* Pods-RxExternalAccessory.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -448,6 +461,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.laxmorek.RxExternalAccessory;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -457,6 +471,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FDFBD10E6EBA41BDDF7C9CBC /* Pods-RxExternalAccessory.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -483,6 +498,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 02F97665721CCB691F2B55A7 /* Pods-RxExternalAccessoryTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 46NCEFB48S;
 				INFOPLIST_FILE = RxExternalAccessoryTests/Info.plist;
@@ -502,6 +518,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 25986D0508E5F58841D3F712 /* Pods-RxExternalAccessoryTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 46NCEFB48S;
 				INFOPLIST_FILE = RxExternalAccessoryTests/Info.plist;
