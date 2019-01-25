@@ -1,0 +1,6 @@
+framework module Pods_RxExternalAccessory {
+  umbrella header "Pods-RxExternalAccessory-umbrella.h"
+
+  export *
+  module * { export * }
+}
