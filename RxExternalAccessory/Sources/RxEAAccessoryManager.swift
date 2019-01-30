@@ -78,10 +78,10 @@ extension RxEAAccessoryManager {
             return .error(RxEAAccessoryManagerError.failedToCreateSession(accessory: accessory, protocolString: protocolString))
         }
         
-        return Observable<StreamDelegateResult>.create { [weak self] observer in
+        return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create() }
             
-            self.closeSocketIfSessionExsit()
+            self.closeSocketIfExsit()
             
             self.streamDelegateResultObserver = observer
             
@@ -95,11 +95,11 @@ extension RxEAAccessoryManager {
     }
     
     func stopCommunicating() {
-        closeSocketIfSessionExsit()
+        closeSocketIfExsit()
         sessionSubject.onNext(nil)
     }
     
-    private func closeSocketIfSessionExsit() {
+    private func closeSocketIfExsit() {
         if let hasCurrentSession = try? sessionSubject.value(), let currentSession = hasCurrentSession {
             closeSocket(for: currentSession)
         }
