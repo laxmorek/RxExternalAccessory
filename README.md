@@ -1,5 +1,13 @@
 # RxExternalAccessory
+![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg)
+[![Version](https://img.shields.io/cocoapods/v/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+[![License](https://img.shields.io/cocoapods/l/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+[![Platform](https://img.shields.io/cocoapods/p/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+
 RxSwift wrapper around ExternalAccessory framework
+
+## Warning
+It's pre-release version. Be careful with using it in your prouction code.
 
 ## Instalation
 
@@ -27,5 +35,10 @@ Then, run the following command:
 $ pod install
 ```
 
-## Warning
-It's pre-release version. Be careful with using it in your prouction code.
+## Contributing
+
+Bug reports and pull requests are welcome.
+
+## License
+
+RxExternalAccessory is released under the MIT license. See LICENSE for details.
