@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
 
   spec.platform       = :ios, "10.0"
 
-  spec.source_files   = "Sources/**/*.swift"
+  spec.source_files   = "RxExternalAccessory/Sources/**/*.swift"
 
   spec.frameworks     = "ExternalAccessory"
 
