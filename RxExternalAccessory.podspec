@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name           = "RxExternalAccessory"
   spec.version        = "0.0.1"
-  spec.summary        = "RxSwift extensions for ExternalAccessory framework"
+  spec.summary        = "RxSwift wrapper around ExternalAccessory framework"
   spec.homepage       = "https://github.com/laxmorek/RxExternalAccessory"
   spec.license        = { :type => "MIT", :file => "LICENSE.md" }
   spec.author         = { "Kamil Harasimowicz" => "kamil.harasimowicz@gmail.com" }
@@ -12,6 +12,6 @@ Pod::Spec.new do |spec|
   spec.source_files   = "Sources/**/*.swift"
 
   spec.frameworks     = "ExternalAccessory"
-  
+
   spec.dependency 'RxSwift', '~> 4.0'
 end
