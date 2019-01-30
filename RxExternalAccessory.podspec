@@ -5,7 +5,7 @@ Pod::Spec.new do |spec|
   spec.homepage       = "https://github.com/laxmorek/RxExternalAccessory"
   spec.license        = { :type => "MIT", :file => "LICENSE.md" }
   spec.author         = { "Kamil Harasimowicz" => "kamil.harasimowicz@gmail.com" }
-  spec.source         = { :git => "https://github.com/laxmorek/RxExternalAccessory.git", :commit => spec.version.to_s }
+  spec.source         = { :git => "https://github.com/laxmorek/RxExternalAccessory.git", :tag => spec.version.to_s }
 
   spec.platform       = :ios, "10.0"
 
