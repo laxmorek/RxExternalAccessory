@@ -59,22 +59,32 @@ extension RxEAAccessoryManager {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create() }
             
+            // close previous connection (if exist any)
             self.closeSocketIfExsit()
             
+            // setup observer for `StreamDelegate` callbacks
             self.streamDelegateResultObserver = observer
             
+            // open new connetion
             self.openSocket(for: session)
             self.sessionSubject.onNext(session)
             
             return Disposables.create {
+                // onDispose stop current connection
                 self.stopCommunicating()
             }
         }
     }
     
     func stopCommunicating() {
+        // close current connection
         closeSocketIfExsit()
+        
+        // complite `StreamDelegate`'s observer
+        streamDelegateResultObserver?.onCompleted()
         streamDelegateResultObserver = nil
+        
+        // clean up
         sessionSubject.onNext(nil)
     }
     
