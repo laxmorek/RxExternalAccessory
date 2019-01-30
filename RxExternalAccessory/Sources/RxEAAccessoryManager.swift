@@ -10,32 +10,54 @@ import RxSwift
 
 protocol RxEAAccessoryManagerProtocol {
     
+    var accessory: Observable<EAAccessory?> { get }
+    var session: Observable<EASession?> { get }
     var connectedAccessories: Observable<[EAAccessory]> { get }
     
     func showBluetoothAccessoryPicker(withNameFilter predicate: NSPredicate?) -> Observable<BluetoothAccessoryPickerResult>
-    func startCommunication(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<Data>
+    
+    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamDelegateResult>
+    func stopCommunicating()
 }
 
 enum BluetoothAccessoryPickerResult {
     case connected
     case alreadyConnected
+    case canceled
 }
 
-final class RxEAAccessoryManager: NSObject {
+typealias StreamDelegateResult = (aStream: Stream, eventCode: Stream.Event)
+
+enum RxEAAccessoryManagerError: Error {
+    case failedToCreateSession(accessory: EAAccessory, protocolString: String)
+}
+
+final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
     
     private let manager: EAAccessoryManager = EAAccessoryManager.shared()
-    
-    private var currentAccessory: EAAccessory? = nil
-    private var currentSession: EASession? = nil
     
     private let connectedAccessoriesSubject: BehaviorSubject<[EAAccessory]>
     let connectedAccessories: Observable<[EAAccessory]>
     
-    private var inputDataSubject = PublishSubject<Data>()
+    private let sessionSubject: BehaviorSubject<EASession?>
+    let session: Observable<EASession?>
+    
+    let accessory: Observable<EAAccessory?>
+    
+    private var streamDelegateResultObserver: AnyObserver<StreamDelegateResult>?
     
     override init() {
         connectedAccessoriesSubject = BehaviorSubject(value: manager.connectedAccessories)
-        connectedAccessories = connectedAccessoriesSubject.asObservable()
+        connectedAccessories = connectedAccessoriesSubject
+            .asObservable()
+        
+        sessionSubject = BehaviorSubject(value: nil)
+        session = sessionSubject
+            .asObservable()
+        
+        accessory = sessionSubject
+            .map { $0?.accessory }
+            .asObservable()
         
         super.init()
         
@@ -43,90 +65,43 @@ final class RxEAAccessoryManager: NSObject {
     }
     
     deinit {
+        stopCommunicating()
         manager.unregisterForLocalNotifications()
     }
 }
 
 // MARK: - Communication
-extension RxEAAccessoryManager: StreamDelegate {
+extension RxEAAccessoryManager {
     
-    enum Error: Swift.Error {
-        case sessionCreateFailed
-    }
-    
-    func startCommunication(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<Data> {
+    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamDelegateResult> {
         guard let session = EASession(accessory: accessory, forProtocol: protocolString) else {
-            return .error(Error.sessionCreateFailed)
+            return .error(RxEAAccessoryManagerError.failedToCreateSession(accessory: accessory, protocolString: protocolString))
         }
         
-        closeSocket()
-        
-        currentAccessory = accessory
-        currentSession = session
-        
-        openSocket()
-        
-        return inputDataSubject.asObservable()
-    }
-    
-    private func openSocket() {
-        if let inputStream = currentSession?.inputStream {
-            inputStream.delegate = self
-            inputStream.schedule(in: .current, forMode: RunLoop.Mode.default)
-            inputStream.open()
-        }
-        if let outputStream = currentSession?.outputStream {
-            outputStream.delegate = self
-            outputStream.schedule(in: .current, forMode: RunLoop.Mode.default)
-            outputStream.open()
-        }
-    }
-    
-    private func closeSocket() {
-        if let inputStream = currentSession?.inputStream {
-            inputStream.close()
-            inputStream.remove(from: .current, forMode: RunLoop.Mode.default)
-            inputStream.delegate = nil
-        }
-        if let outputStream = currentSession?.outputStream {
-            outputStream.close()
-            outputStream.remove(from: .current, forMode: RunLoop.Mode.default)
-            outputStream.delegate = nil
-        }
-        
-        currentSession = nil
-        currentAccessory = nil
-    }
-    
-    private func readData() {
-        let readBuffer = NSMutableData()
-        
-        if let inputStream = currentSession?.inputStream {
-            let bufferSize = 1024
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
-            while inputStream.hasBytesAvailable {
-                let read = inputStream.read(buffer, maxLength: bufferSize)
-                if read == 0 {
-                    break //EOS
-                }
-                readBuffer.append(buffer, length: read)
+        return Observable<StreamDelegateResult>.create { [weak self] observer in
+            guard let self = self else { return Disposables.create() }
+            
+            self.closeSocketIfSessionExsit()
+            
+            self.streamDelegateResultObserver = observer
+            
+            self.openSocket(for: session)
+            self.sessionSubject.onNext(session)
+            
+            return Disposables.create {
+                self.stopCommunicating()
             }
-            buffer.deallocate()
-            
-            inputDataSubject.on(readBuffer.mutableBytes)
-            
-            let newline = Data(bytes: [0x0d, 0x0a])
-            let responseEndRange = readBuffer.range(of: newline, options: [], in: NSRange(location: 0, length: readBuffer.length))
-            readBuffer.replaceBytes(in: NSRange(location: 0, length: responseEndRange.location + responseEndRange.length), withBytes: nil, length: 0)
         }
     }
     
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-        switch eventCode {
-        case .hasBytesAvailable:
-            readData()
-        default:
-            break
+    func stopCommunicating() {
+        closeSocketIfSessionExsit()
+        sessionSubject.onNext(nil)
+    }
+    
+    private func closeSocketIfSessionExsit() {
+        if let hasCurrentSession = try? sessionSubject.value(), let currentSession = hasCurrentSession {
+            closeSocket(for: currentSession)
         }
     }
 }
@@ -144,9 +119,11 @@ extension RxEAAccessoryManager {
                         case EABluetoothAccessoryPickerError.alreadyConnected:
                             observer.onNext(.alreadyConnected)
                             observer.onCompleted()
+                        case EABluetoothAccessoryPickerError.resultCancelled:
+                            observer.onNext(.canceled)
+                            observer.onCompleted()
                         case EABluetoothAccessoryPickerError.resultNotFound,
-                             EABluetoothAccessoryPickerError.resultFailed,
-                             EABluetoothAccessoryPickerError.resultCancelled:
+                             EABluetoothAccessoryPickerError.resultFailed:
                             observer.onError(error)
                         default:
                             observer.onError(error)
@@ -159,6 +136,46 @@ extension RxEAAccessoryManager {
             )
             
             return Disposables.create()
+        }
+    }
+}
+
+// MARK: - Socket managment
+extension RxEAAccessoryManager {
+    
+    private func openSocket(for session: EASession) {
+        if let inputStream = session.inputStream {
+            inputStream.delegate = self
+            inputStream.schedule(in: .current, forMode: .default)
+            inputStream.open()
+        }
+        if let outputStream = session.outputStream {
+            outputStream.close()
+            outputStream.remove(from: .current, forMode: RunLoop.Mode.default)
+            outputStream.delegate = nil
+        }
+    }
+    
+    private func closeSocket(for session: EASession) {
+        if let inputStream = session.inputStream {
+            inputStream.close()
+            inputStream.remove(from: .current, forMode: .default)
+            inputStream.delegate = nil
+        }
+        if let outputStream = session.outputStream {
+            outputStream.close()
+            outputStream.remove(from: .current, forMode: .default)
+            outputStream.delegate = nil
+        }
+    }
+}
+
+// MARK: - StreamDelegate
+extension RxEAAccessoryManager: StreamDelegate {
+    
+    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+        if let streamDelegateResultObserver = streamDelegateResultObserver {
+            streamDelegateResultObserver.onNext((aStream: aStream, eventCode: eventCode))
         }
     }
 }
