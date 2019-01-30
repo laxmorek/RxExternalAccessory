@@ -19,7 +19,7 @@ It's pre-release version. Be careful with using it in your prouction code.
 $ gem install cocoapods
 ```
 
-To integrate RxCoreLocation into your Xcode project using CocoaPods, specify it in your `Podfile`:
+To integrate RxExternalAccessory into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
