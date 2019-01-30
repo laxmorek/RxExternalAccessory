@@ -1,13 +1,13 @@
 # RxExternalAccessory
 ![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg)
-[![Version](https://img.shields.io/cocoapods/v/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
-[![License](https://img.shields.io/cocoapods/l/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
-[![Platform](https://img.shields.io/cocoapods/p/RxMediaPicker.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+[![Version](https://img.shields.io/cocoapods/v/RxExternalAccessory.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+[![License](https://img.shields.io/cocoapods/l/RxExternalAccessory.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
+[![Platform](https://img.shields.io/cocoapods/p/RxExternalAccessory.svg?style=flat)](http://cocoapods.org/pods/RxExternalAccessory)
 
 RxSwift wrapper around ExternalAccessory framework
 
 ## Warning
-It's pre-release version. Be careful with using it in your prouction code.
+It's pre-release version. Be careful with using it in your production code.
 
 ## Instalation
 
