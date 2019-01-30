@@ -13,6 +13,7 @@
 		AB8BA04921FB65470005624C /* RxExternalAccessory.h in Headers */ = {isa = PBXBuildFile; fileRef = AB8BA03B21FB65470005624C /* RxExternalAccessory.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AB8BA05521FB68C80005624C /* Bundle+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BA05421FB68C80005624C /* Bundle+Utils.swift */; };
 		AB8BA05921FB6B610005624C /* RxEAAccessoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BA05821FB6B610005624C /* RxEAAccessoryManager.swift */; };
+		AB8BA1782201F63A00F2A671 /* RxEAAccessoryManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8BA1772201F63A00F2A671 /* RxEAAccessoryManagerProtocol.swift */; };
 		E1A2B1CEAAFABBCC46B7003D /* Pods_RxExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7F886A25EBE99E781E14EFE /* Pods_RxExternalAccessory.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		AB8BA04821FB65470005624C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB8BA05421FB68C80005624C /* Bundle+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Utils.swift"; sourceTree = "<group>"; };
 		AB8BA05821FB6B610005624C /* RxEAAccessoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxEAAccessoryManager.swift; sourceTree = "<group>"; };
+		AB8BA1772201F63A00F2A671 /* RxEAAccessoryManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxEAAccessoryManagerProtocol.swift; sourceTree = "<group>"; };
 		FDFBD10E6EBA41BDDF7C9CBC /* Pods-RxExternalAccessory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxExternalAccessory.release.xcconfig"; path = "Target Support Files/Pods-RxExternalAccessory/Pods-RxExternalAccessory.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,6 +121,7 @@
 			children = (
 				AB8BA05321FB68710005624C /* Extensions */,
 				AB8BA05821FB6B610005624C /* RxEAAccessoryManager.swift */,
+				AB8BA1772201F63A00F2A671 /* RxEAAccessoryManagerProtocol.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 			files = (
 				AB8BA05521FB68C80005624C /* Bundle+Utils.swift in Sources */,
 				AB8BA05921FB6B610005624C /* RxEAAccessoryManager.swift in Sources */,
+				AB8BA1782201F63A00F2A671 /* RxEAAccessoryManagerProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

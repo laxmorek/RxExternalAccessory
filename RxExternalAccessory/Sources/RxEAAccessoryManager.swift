@@ -8,33 +8,9 @@
 import ExternalAccessory
 import RxSwift
 
-protocol RxEAAccessoryManagerProtocol {
-    
-    var accessory: Observable<EAAccessory?> { get }
-    var session: Observable<EASession?> { get }
-    var connectedAccessories: Observable<[EAAccessory]> { get }
-    
-    func showBluetoothAccessoryPicker(withNameFilter predicate: NSPredicate?) -> Observable<BluetoothAccessoryPickerResult>
-    
-    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamDelegateResult>
-    func stopCommunicating()
-}
-
-enum BluetoothAccessoryPickerResult {
-    case connected
-    case alreadyConnected
-    case canceled
-}
-
-typealias StreamDelegateResult = (aStream: Stream, eventCode: Stream.Event)
-
-enum RxEAAccessoryManagerError: Error {
-    case failedToCreateSession(accessory: EAAccessory, protocolString: String)
-}
-
 final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
     
-    private let manager: EAAccessoryManager = EAAccessoryManager.shared()
+    private let manager: EAAccessoryManager
     
     private let connectedAccessoriesSubject: BehaviorSubject<[EAAccessory]>
     let connectedAccessories: Observable<[EAAccessory]>
@@ -44,9 +20,11 @@ final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
     
     let accessory: Observable<EAAccessory?>
     
-    private var streamDelegateResultObserver: AnyObserver<StreamDelegateResult>?
+    private var streamDelegateResultObserver: AnyObserver<StreamResult>?
     
-    override init() {
+    init(manager: EAAccessoryManager = EAAccessoryManager.shared()) {
+        self.manager = manager
+        
         connectedAccessoriesSubject = BehaviorSubject(value: manager.connectedAccessories)
         connectedAccessories = connectedAccessoriesSubject
             .asObservable()
@@ -73,9 +51,9 @@ final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
 // MARK: - Communication
 extension RxEAAccessoryManager {
     
-    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamDelegateResult> {
+    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamResult> {
         guard let session = EASession(accessory: accessory, forProtocol: protocolString) else {
-            return .error(RxEAAccessoryManagerError.failedToCreateSession(accessory: accessory, protocolString: protocolString))
+            return .error(SessionError.failedToCreateSession(accessory: accessory, protocolString: protocolString))
         }
         
         return Observable.create { [weak self] observer in
@@ -96,6 +74,7 @@ extension RxEAAccessoryManager {
     
     func stopCommunicating() {
         closeSocketIfExsit()
+        streamDelegateResultObserver = nil
         sessionSubject.onNext(nil)
     }
     
