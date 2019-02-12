@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name           = "RxExternalAccessory"
-  spec.version        = "0.0.1"
+  spec.version        = "0.9.0"
   spec.summary        = "RxSwift wrapper around ExternalAccessory framework"
   spec.homepage       = "https://github.com/laxmorek/RxExternalAccessory"
   spec.license        = { :type => "MIT", :file => "LICENSE" }
