@@ -8,10 +8,10 @@
 import Foundation
 
 // MARK: - Utils
-extension Bundle {
+public extension Bundle {
     
     /// returns value for key "UISupportedExternalAccessoryProtocols"
-    var supportedAccessoryProtocols: [String] {
+    public var supportedAccessoryProtocols: [String] {
         return object(forInfoDictionaryKey: "UISupportedExternalAccessoryProtocols") as? [String] ?? []
     }
 }

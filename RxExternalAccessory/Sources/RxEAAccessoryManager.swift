@@ -8,21 +8,33 @@
 import ExternalAccessory
 import RxSwift
 
-final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
+public typealias StreamResult = (aStream: Stream, eventCode: Stream.Event)
+
+public enum BluetoothAccessoryPickerResult {
+    case connected
+    case alreadyConnected
+    case canceled
+}
+
+public enum SessionError: Error {
+    case failedToCreateSession(accessory: EAAccessory, protocolString: String)
+}
+
+public final class RxEAAccessoryManager: NSObject {
     
     private let manager: EAAccessoryManager
     
     private let connectedAccessoriesSubject: BehaviorSubject<[EAAccessory]>
-    let connectedAccessories: Observable<[EAAccessory]>
+    public let connectedAccessories: Observable<[EAAccessory]>
     
     private let sessionSubject: BehaviorSubject<EASession?>
-    let session: Observable<EASession?>
+    public let session: Observable<EASession?>
     
-    let accessory: Observable<EAAccessory?>
+    public let accessory: Observable<EAAccessory?>
     
     private var streamDelegateResultObserver: AnyObserver<StreamResult>?
     
-    init(manager: EAAccessoryManager = EAAccessoryManager.shared()) {
+    public init(manager: EAAccessoryManager = EAAccessoryManager.shared()) {
         self.manager = manager
         
         connectedAccessoriesSubject = BehaviorSubject(value: manager.connectedAccessories)
@@ -51,7 +63,7 @@ final class RxEAAccessoryManager: NSObject, RxEAAccessoryManagerProtocol {
 // MARK: - Communication
 extension RxEAAccessoryManager {
     
-    func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamResult> {
+    public func startCommunicating(withAccessory accessory: EAAccessory, forProtocol protocolString: String) -> Observable<StreamResult> {
         guard let session = EASession(accessory: accessory, forProtocol: protocolString) else {
             return .error(SessionError.failedToCreateSession(accessory: accessory, protocolString: protocolString))
         }
@@ -76,7 +88,7 @@ extension RxEAAccessoryManager {
         }
     }
     
-    func stopCommunicating() {
+    public func stopCommunicating() {
         // close current connection
         closeSocketIfExsit()
         
@@ -96,9 +108,9 @@ extension RxEAAccessoryManager {
 }
 
 // MARK: - BluetoothAccessoryPicker
-extension RxEAAccessoryManager {
+public extension RxEAAccessoryManager {
     
-    func showBluetoothAccessoryPicker(withNameFilter predicate: NSPredicate?) -> Observable<BluetoothAccessoryPickerResult> {
+    public func showBluetoothAccessoryPicker(withNameFilter predicate: NSPredicate?) -> Observable<BluetoothAccessoryPickerResult> {
         return Observable.create { [manager] observer in
             manager.showBluetoothAccessoryPicker(
                 withNameFilter: predicate,
@@ -162,7 +174,7 @@ extension RxEAAccessoryManager {
 // MARK: - StreamDelegate
 extension RxEAAccessoryManager: StreamDelegate {
     
-    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         if let streamDelegateResultObserver = streamDelegateResultObserver {
             streamDelegateResultObserver.onNext((aStream: aStream, eventCode: eventCode))
         }
