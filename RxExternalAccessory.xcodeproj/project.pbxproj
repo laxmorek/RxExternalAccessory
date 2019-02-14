@@ -38,6 +38,7 @@
 		AB8BA04621FB65470005624C /* RxExternalAccessoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExternalAccessoryTests.swift; sourceTree = "<group>"; };
 		AB8BA04821FB65470005624C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB8BA05821FB6B610005624C /* RxEAAccessoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxEAAccessoryManager.swift; sourceTree = "<group>"; };
+		ABA4A8CD2215A9F20026C63A /* RxExternalAccessory.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = RxExternalAccessory.podspec; sourceTree = "<group>"; };
 		FDFBD10E6EBA41BDDF7C9CBC /* Pods-RxExternalAccessory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxExternalAccessory.release.xcconfig"; path = "Target Support Files/Pods-RxExternalAccessory/Pods-RxExternalAccessory.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,6 +77,7 @@
 		AB8BA02E21FB65470005624C = {
 			isa = PBXGroup;
 			children = (
+				ABA4A8CD2215A9F20026C63A /* RxExternalAccessory.podspec */,
 				AB8BA03A21FB65470005624C /* RxExternalAccessory */,
 				AB8BA04521FB65470005624C /* RxExternalAccessoryTests */,
 				AB8BA03921FB65470005624C /* Products */,
