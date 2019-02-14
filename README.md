@@ -6,9 +6,6 @@
 
 RxSwift wrapper around ExternalAccessory framework
 
-## Warning
-It's pre-release version. Be careful with using it in your production code.
-
 ## Instalation
 
 ### CocoaPods
@@ -33,6 +30,45 @@ Then, run the following command:
 
 ```bash
 $ pod install
+```
+
+## Usage
+
+Create `RxEAAccessoryManager` instance:
+
+```swift
+let rx_manager = RxEAAccessoryManager()
+```
+
+You can observe:
+
+```swift
+// available accessories - Observable<[EAAccessory]>
+rx_manager.connectedAccessories
+    .subscribe(onNext: { accessories in
+        // 
+    })
+    .disposed(by: disposeBag)
+
+// current opened session (nil if any session on) - Observable<EASession?>
+rx_manager.session
+    .subscribe(onNext: { session in
+        //
+    })
+    .disposed(by: disposeBag)
+
+// calls from `StreamDelegate` - Observable<StreamResult> where StreamResult = (aStream: Stream, eventCode: Stream.Event)
+rx_manager.streamResult
+    .subscribe(onNext: { stream, eventCode in
+        switch (stream, eventCode) {
+        case (let inputStream as InputStream, .hasBytesAvailable):
+            //
+            break
+        default:
+            break
+        }
+    })
+    .disposed(by: disposeBag)
 ```
 
 ## Contributing
