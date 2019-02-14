@@ -6,9 +6,6 @@
 
 RxSwift wrapper around ExternalAccessory framework
 
-## Warning
-It's pre-release version. Be careful with using it in your production code.
-
 ## Instalation
 
 ### CocoaPods
@@ -33,6 +30,58 @@ Then, run the following command:
 
 ```bash
 $ pod install
+```
+
+## Usage
+
+Create `RxEAAccessoryManager` instance:
+
+```swift
+let rx_manager = RxEAAccessoryManager()
+```
+
+Available actions:
+
+```swift
+// tries to open session with first match from available accessories for given `supportedProtocols`
+rx_manager.tryConnectingAndStartCommunicating(forProtocols: supportedProtocols)
+
+// tries to open session for given `EAAccessory`
+rx_manager.tryConnectingAndStartCommunicating(to: accessory, forProtocols: supportedProtocols)
+
+// stops any working sessions
+rx_manager.stopCommunicating()
+```
+
+You can observe:
+
+```swift
+// available accessories - Observable<[EAAccessory]>
+rx_manager.connectedAccessories
+    .subscribe(onNext: { accessories in
+        // DO SOMETHING
+    })
+    .disposed(by: disposeBag)
+
+// current opened session (nil if any session on) - Observable<EASession?>
+rx_manager.session
+    .subscribe(onNext: { session in
+        // DO SOMETHING
+    })
+    .disposed(by: disposeBag)
+
+// calls from `StreamDelegate` - Observable<StreamResult> where StreamResult = (aStream: Stream, eventCode: Stream.Event)
+rx_manager.streamResult
+    .subscribe(onNext: { stream, eventCode in
+        switch (stream, eventCode) {
+        case (let inputStream as InputStream, .hasBytesAvailable):
+            // DO SOMETHING
+            break
+        default:
+            break
+        }
+    })
+    .disposed(by: disposeBag)
 ```
 
 ## Contributing
