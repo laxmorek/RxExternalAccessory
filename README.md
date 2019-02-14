@@ -47,7 +47,7 @@ Available actions:
 rx_manager.tryConnectingAndStartCommunicating(forProtocols: supportedProtocols)
 
 // tries to open session for given `EAAccessory`
-rx_manager.tryConnectingAndStartCommunicating(to: accessory, forProtocols: self.supportedProtocols)
+rx_manager.tryConnectingAndStartCommunicating(to: accessory, forProtocols: supportedProtocols)
 
 // stops any working sessions
 rx_manager.stopCommunicating()
