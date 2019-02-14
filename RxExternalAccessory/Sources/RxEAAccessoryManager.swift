@@ -8,21 +8,29 @@
 import ExternalAccessory
 import RxSwift
 
+/// Rx wrapper around ExternalAccessory framework
 public final class RxEAAccessoryManager: NSObject {
     
     public typealias StreamResult = (aStream: Stream, eventCode: Stream.Event)
     
+    /// access to wrapped `EAAccessoryManager`
     public let manager: EAAccessoryManager
     
-    private let connectedAccessoriesSubject: BehaviorSubject<[EAAccessory]>
+    /// connected accessories
     public let connectedAccessories: Observable<[EAAccessory]>
+    private let connectedAccessoriesSubject: BehaviorSubject<[EAAccessory]>
     
-    private let sessionSubject: BehaviorSubject<EASession?>
+    /// current session
     public let session: Observable<EASession?>
+    private let sessionSubject: BehaviorSubject<EASession?>
     
-    private var streamResultSubject: PublishSubject<StreamResult>
+    /// `StreamDelegate`'s wrapper
     public let streamResult: Observable<StreamResult>
+    private var streamResultSubject: PublishSubject<StreamResult>
     
+    /// Init
+    ///
+    /// - Parameter manager: EAAccessoryManager
     public init(manager: EAAccessoryManager = EAAccessoryManager.shared()) {
         self.manager = manager
         
@@ -52,6 +60,10 @@ public final class RxEAAccessoryManager: NSObject {
 // MARK: - Start Communicating
 extension RxEAAccessoryManager {
     
+    /// Interates over connected accessories and tries to create EASession.
+    ///
+    /// - Parameter protocols: protocols
+    /// - Returns: true - session opened, false - otherwise
     public func tryConnectingAndStartCommunicating(forProtocols protocols: Set<String>) -> Bool {
         // stop current working session
         stopCommunicating()
@@ -66,6 +78,12 @@ extension RxEAAccessoryManager {
         return false
     }
     
+    /// Tries to create EASession for given accessory
+    ///
+    /// - Parameters:
+    ///   - accessory: accessory
+    ///   - protocols: protocols
+    /// - Returns: true - session opened, false - otherwise
     public func tryConnectingAndStartCommunicating(to accessory: EAAccessory, forProtocols protocols: Set<String>) -> Bool {
         // stop current working session
         stopCommunicating()
@@ -100,6 +118,7 @@ extension RxEAAccessoryManager {
 // MARK: - Stop Communicating
 extension RxEAAccessoryManager {
     
+    /// close current opened EASession
     public func stopCommunicating() {
         // close current connection
         closeSocketIfExsit()
