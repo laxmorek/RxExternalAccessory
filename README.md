@@ -40,7 +40,20 @@ Create `RxEAAccessoryManager` instance:
 let rx_manager = RxEAAccessoryManager()
 ```
 
-You can subscribe to:
+Available actions:
+
+```swift
+// tries to open session with first match from available accessories for given `supportedProtocols`
+rx_manager.tryConnectingAndStartCommunicating(forProtocols: supportedProtocols)
+
+// tries to open session for given `EAAccessory`
+rx_manager.tryConnectingAndStartCommunicating(to: accessory, forProtocols: self.supportedProtocols)
+
+// stops any working sessions
+rx_manager.stopCommunicating()
+```
+
+You can observe:
 
 ```swift
 // available accessories - Observable<[EAAccessory]>
@@ -69,19 +82,6 @@ rx_manager.streamResult
         }
     })
     .disposed(by: disposeBag)
-```
-
-Actions:
-
-```swift
-// tries to open session with first match from available accessories for given `supportedProtocols`
-rx_manager.tryConnectingAndStartCommunicating(forProtocols: supportedProtocols)
-
-// tries to open session for given `EAAccessory`
-rx_manager.tryConnectingAndStartCommunicating(to: accessory, forProtocols: self.supportedProtocols)
-
-// stops any working sessions
-rx_manager.stopCommunicating()
 ```
 
 ## Contributing
