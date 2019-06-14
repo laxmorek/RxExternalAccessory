@@ -128,7 +128,7 @@ extension RxEAAccessoryManager {
     }
     
     private func closeSocketIfExsit() {
-        if let hasCurrentSession = try? sessionSubject.value(), let currentSession = hasCurrentSession {
+        if let hasCurrentSession = ((try? sessionSubject.value()) as EASession??), let currentSession = hasCurrentSession {
             closeSocket(for: currentSession)
         }
     }
@@ -199,7 +199,7 @@ extension RxEAAccessoryManager {
         if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory {
             // check is session exist and its related to disconnected accessory
             if
-                let hasCurrentSession = try? sessionSubject.value(),
+                let hasCurrentSession = ((try? sessionSubject.value()) as EASession??),
                 let currentSession = hasCurrentSession,
                 currentSession.accessory?.connectionID == accessory.connectionID
             {
