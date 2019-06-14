@@ -13,5 +13,5 @@ Pod::Spec.new do |spec|
 
   spec.frameworks     = "ExternalAccessory"
 
-  spec.dependency 'RxSwift', '~> 4.0'
+  spec.dependency 'RxSwift', '~> 5.0'
 end
